@@ -3,6 +3,7 @@ var contexto = canvas.getContext("2d");
 var boton =document.getElementById("inicio");
 var vidas = 3;
 var puntaje = 0;
+var nivel = 1;
 
 boton.addEventListener("click",iniciarJuego);
 
@@ -53,16 +54,6 @@ document.addEventListener("keyup", function(){
     
 });
 
-//Fin barra jugador
-
-barra.img.src = "Imagenes/barra.PNG";
-
-function dibujarBarra(){
-    
-    contexto.drawImage(barra.img, barra.posX, barra.posY);
-    
-}
-
 function moverBarra(){
     
     if(barra.derecha && barra.posX < canvas.width - barra.ancho){
@@ -79,21 +70,95 @@ function moverBarra(){
     
 }
 
+function dibujarBarra(){
+    
+    contexto.drawImage(barra.img, barra.posX, barra.posY);
+    
+}
+
+barra.img.src = "Imagenes/barra.PNG";
+
+//Fin barra jugador
+
+
+//Bolita
+
+var bolita= {
+    
+    posX : canvas.width/2,
+    posY : canvas.height/2,
+    radio : 8,
+    direccionX : 2, 
+    direccionY : 2,
+    color: "yellow"
+};
+
+function dibujarBolita(){
+    
+    contexto.fillStyle = bolita.color;
+    contexto.beginPath();
+    contexto.arc(bolita.posX, bolita.posY, bolita.radio, 0, Math.PI*2);
+    contexto.fill();
+    
+}
+
+function moverBolita(){
+    
+    bolita.posX += bolita.direccionX;
+    bolita.posY += bolita.direccionY;
+    
+}
+
+//Fin bolita
+
+function dibujarInformacion(){
+    
+    contexto.fillStyle = "red";
+    contexto.fillText("vidas restantes: "+ vidas, 5, 10);
+    contexto.fillText("Nivel: "+ nivel, canvas.width-50, 10);
+}
+
 function dibujarTablero(){
     
     contexto.clearRect(0,0,canvas.width,canvas.height);
+    dibujarBolita();
     dibujarBarra();
+    dibujarInformacion();
     
 }
 
 function actualizar(){
     
     moverBarra();
-   
+    moverBolita();
+    
 }
 
 function choques(){
     
+    if(bolita.posX <= bolita.radio || bolita.posX >= canvas.width - bolita.radio){
+        
+        bolita.direccionX = -bolita.direccionX; 
+        
+    }
+    
+    if(bolita.posY <=0){
+        
+        bolita.direccionY = -bolita.direccionY; 
+        
+    }
+    
+    if(bolita.posY >= canvas.height - bolita.radio){
+        
+        bolita.direccionY = -bolita.direccionY;
+        
+        if(!(bolita.posX > barra.posX && bolita.posX < barra.posX + barra.ancho)){
+            
+            perderVida();
+            
+        }
+        
+    }
     
 }
 
@@ -123,6 +188,22 @@ function iniciarJuego(){
     var modelo = document.getElementById("modelo");
     modelo.style.display = "none";
     fotogramas();
+    
+}
+
+function perderVida(){
+    
+    if(vidas >0){
+        
+        alert("Haz perdido una vida");
+        vidas--;
+        
+    } else {
+        
+        alert("Game over");
+        finalizarJuego();
+        
+    }
     
 }
 
