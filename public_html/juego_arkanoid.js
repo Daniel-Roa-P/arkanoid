@@ -86,12 +86,18 @@ barra.img.src = "Imagenes/barra.PNG";
 var bolita= {
     
     posX : canvas.width/2,
-    posY : canvas.height/2,
+    posY : canvas.height/1.5,
     radio : 8,
     direccionX : 2, 
-    direccionY : 2,
+    direccionY : 3,
     color: "yellow"
 };
+
+function aleatorioDirY(direccionActual){
+    
+    var DireccionY=((Math.random()*4)*(Math.sign(direccionActual)))+(1*(Math.sign(direccionActual)));
+    return DireccionY;
+}
 
 function dibujarBolita(){
     
@@ -166,7 +172,32 @@ function dibujarLadrillos(){
     }
     
 }
+  
+function choqueLadrillos(){
     
+    for(i=0; i<infoLadrillos.columnas; i++){
+        
+        for(j=0; j<infoLadrillos.filas;j++){
+            
+            var temLadrillo=ladrillos[i][j];
+            
+            if(temLadrillo.status === 1){
+                
+                if(bolita.posX > temLadrillo.posX && bolita.posX < (temLadrillo.posX + infoLadrillos.ancho) && bolita.posY > temLadrillo.posY && bolita.posY < (temLadrillo.posY + infoLadrillos.alto)){
+                    
+                    temLadrillo.status=0;
+                    bolita.direccionY = -aleatorioDirY(bolita.direccionY);
+
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+}
+
 //Fin ladrillos
 
 function dibujarInformacion(){
@@ -174,6 +205,7 @@ function dibujarInformacion(){
     contexto.fillStyle = "red";
     contexto.fillText("vidas restantes: "+ vidas, 5, 10);
     contexto.fillText("Nivel: "+ nivel, canvas.width-50, 10);
+    
 }
 
 function dibujarTablero(){
@@ -190,7 +222,7 @@ function actualizar(){
     
     moverBarra();
     moverBolita();
-    
+    choqueLadrillos();
 }
 
 function choques(){
@@ -203,13 +235,13 @@ function choques(){
     
     if(bolita.posY <=0){
         
-        bolita.direccionY = -bolita.direccionY; 
-        
+        bolita.direccionY = -aleatorioDirY(bolita.direccionY); 
+
     }
     
     if(bolita.posY >= canvas.height - bolita.radio){
         
-        bolita.direccionY = -bolita.direccionY;
+        bolita.direccionY = -aleatorioDirY(bolita.direccionY);
         
         if(!(bolita.posX > barra.posX && bolita.posX < barra.posX + barra.ancho)){
             
