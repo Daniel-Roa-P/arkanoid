@@ -111,6 +111,64 @@ function moverBolita(){
 
 //Fin bolita
 
+//Ladrillos
+
+var ladrillos = []
+var infoLadrillos = {
+    
+    columnas: 5,
+    filas: 5,
+    ancho: 50,
+    alto: 10,
+    margen: 3,
+    top: 20,
+    left: 20,
+    img: document.createElement("img")
+    
+};
+
+infoLadrillos.img.src = "Imagenes/ladrillo.PNG";
+
+function generarLadrillos(){
+    
+    for(i=0; i<infoLadrillos.columnas; i++){
+        
+        ladrillos[i]=[];
+        
+        for(j=0; j<infoLadrillos.filas;j++){
+            
+            var ladrilloX = infoLadrillos.left + (i*(infoLadrillos.ancho + infoLadrillos.margen));
+            var ladrilloY = infoLadrillos.top + (j*(infoLadrillos.alto + infoLadrillos.margen));
+            ladrillos[i][j]={posX: ladrilloX, posY: ladrilloY, status:1};
+            
+        }
+        
+    }
+    
+}
+    
+generarLadrillos();
+    
+function dibujarLadrillos(){
+    
+    for(i=0; i<infoLadrillos.columnas; i++){
+        
+        for(j=0; j<infoLadrillos.filas;j++){
+            
+            if(ladrillos[i][j].status === 1){
+                
+               contexto.drawImage(infoLadrillos.img, ladrillos[i][j].posX , ladrillos[i][j].posY);
+                
+            }
+            
+        }
+        
+    }
+    
+}
+    
+//Fin ladrillos
+
 function dibujarInformacion(){
     
     contexto.fillStyle = "red";
@@ -124,6 +182,7 @@ function dibujarTablero(){
     dibujarBolita();
     dibujarBarra();
     dibujarInformacion();
+    dibujarLadrillos();
     
 }
 
