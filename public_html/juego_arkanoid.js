@@ -18,7 +18,7 @@ var barra = {
     img: document.createElement("img"),
     derecha: false,
     izquierda: false,
-    velocidad:6
+    velocidad:7
     
 };
 
@@ -119,7 +119,7 @@ function moverBolita(){
 
 //Ladrillos
 
-var ladrillos = []
+var ladrillos = [];
 var infoLadrillos = {
     
     columnas: 5,
@@ -187,6 +187,13 @@ function choqueLadrillos(){
                     
                     temLadrillo.status=0;
                     bolita.direccionY = -aleatorioDirY(bolita.direccionY);
+                    puntaje++;
+                    
+                    if(puntaje === nivel*(infoLadrillos.columnas * infoLadrillos.filas)){
+                        
+                        levelUp();
+                        
+                    }
 
                 }
                 
@@ -205,6 +212,8 @@ function dibujarInformacion(){
     contexto.fillStyle = "red";
     contexto.fillText("vidas restantes: "+ vidas, 5, 10);
     contexto.fillText("Nivel: "+ nivel, canvas.width-50, 10);
+    contexto.fillText("Puntaje: "+ puntaje, canvas.width/3, 10);
+    contexto.fillText("Velocidad: "+ barra.velocidad, canvas.width * 6/10, 10);
     
 }
 
@@ -235,13 +244,13 @@ function choques(){
     
     if(bolita.posY <=0){
         
-        bolita.direccionY = -aleatorioDirY(bolita.direccionY); 
+        bolita.direccionY = -bolita.direccionY; 
 
     }
     
     if(bolita.posY >= canvas.height - bolita.radio){
         
-        bolita.direccionY = -aleatorioDirY(bolita.direccionY);
+        bolita.direccionY = -bolita.direccionY;
         
         if(!(bolita.posX > barra.posX && bolita.posX < barra.posX + barra.ancho)){
             
@@ -262,15 +271,26 @@ function fotogramas(){
     
 }
 
-function reproducirSonido(){
+function resetear(){
     
-    
+    bolita.posX = canvas.width/2;
+    bolita.posY = canvas.height/1.5;
+    bolita.direccionY = 3;
+    bolita.direccionX = 2;
+    barra.posX = canvas.width/2;
+    barra.posY = canvas.height-10;
+    barra.izquierda = false;
+    barra.derecha = false;
     
 }
 
 function levelUp(){
     
-    
+    alert("Has subido de nivel :D");
+    generarLadrillos();
+    resetear();
+    nivel++;
+    barra.velocidad--;
     
 }
 
@@ -287,11 +307,12 @@ function perderVida(){
     if(vidas >0){
         
         alert("Haz perdido una vida");
+        resetear();
         vidas--;
         
     } else {
         
-        alert("Game over");
+        alert("Game over, puntuación final es: " + puntaje);
         finalizarJuego();
         
     }
